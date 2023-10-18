@@ -61,7 +61,12 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $request->validate([
+            'title' => 'required|max:255|unique:posts,title,' . $post->id,
+            'body' => 'required|min:3',
+        ]);
+        $post->update($request->all());
+        return redirect()->route('posts.index')->with('success', 'Post updated');
     }
 
     /**
@@ -69,6 +74,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return redirect()->route('posts.index')->with('success', 'Post deleted');
     }
 }
